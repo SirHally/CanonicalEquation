@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanonicalEquation.Console", "CanonicalEquation.Console\CanonicalEquation.Console.csproj", "{47A27591-4D25-4C8A-BE97-5DDC8E4100E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanonicalEquation.Logic", "CanonicalEquation.Logic\CanonicalEquation.Logic.csproj", "{3DACA00E-A4B7-420A-BABE-EDD2EA20121C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanonicalEquation.Test", "CanonicalEquation.Test\CanonicalEquation.Test.csproj", "{78D8D005-EA14-4F6D-AF0A-1B35E9688566}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47A27591-4D25-4C8A-BE97-5DDC8E4100E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A27591-4D25-4C8A-BE97-5DDC8E4100E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47A27591-4D25-4C8A-BE97-5DDC8E4100E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47A27591-4D25-4C8A-BE97-5DDC8E4100E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DACA00E-A4B7-420A-BABE-EDD2EA20121C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DACA00E-A4B7-420A-BABE-EDD2EA20121C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DACA00E-A4B7-420A-BABE-EDD2EA20121C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DACA00E-A4B7-420A-BABE-EDD2EA20121C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78D8D005-EA14-4F6D-AF0A-1B35E9688566}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78D8D005-EA14-4F6D-AF0A-1B35E9688566}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78D8D005-EA14-4F6D-AF0A-1B35E9688566}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78D8D005-EA14-4F6D-AF0A-1B35E9688566}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

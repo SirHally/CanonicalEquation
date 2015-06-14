@@ -50,8 +50,15 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="EquationTest.cs" />
+    <Compile Include="TermTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CanonicalEquation.Logic\CanonicalEquation.Logic.csproj">
+      <Project>{3daca00e-a4b7-420a-babe-edd2ea20121c}</Project>
+      <Name>CanonicalEquation.Logic</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
