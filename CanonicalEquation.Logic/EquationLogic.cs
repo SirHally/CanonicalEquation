@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -13,19 +14,24 @@ namespace CanonicalEquation.Logic
             var collection = new Stack<TermCollection>();
             collection.Push(new TermCollection(false));
             var isMinus = false;
+            bool exponentaPart = false;
             foreach (var current in equation)
             {
+                if (!Char.IsNumber(current))
+                {
+                    exponentaPart = false;
+                }
                 switch (current)
                 {
                     case ' ':
                         continue;
                     case '(':
-                        collection.Push(new TermCollection(isMinus ^ collection.Last().IsMinus));
+                        collection.Push(new TermCollection(isMinus ^ collection.First().IsMinus));
                         break;
                     case ')':
                         collection.First().AddTerm(currentTerm);
                         var currentCollection = collection.Pop();
-                        collection.Last().AddCollection(currentCollection);
+                        collection.First().AddCollection(currentCollection);
                         break;
                     case '+':
                         isMinus = false;
@@ -33,13 +39,25 @@ namespace CanonicalEquation.Logic
                         currentTerm.Append(current);
                         break;
                     case '-':
-                        isMinus = true;
-                        collection.First().AddTerm(currentTerm);
-                        currentTerm.Append(current);
+                        if (exponentaPart)//Этот минус - показатель отрицательной степени K
+                        {
+                            currentTerm.Append(current);
+                        }
+                        else
+                        {//Это минус в выражении, между Term
+                            isMinus = true;
+                            collection.First().AddTerm(currentTerm);
+                            currentTerm.Append(current);
+                        }
                         break;
                     case '=':
+                        isMinus = false;
                         collection.First().AddTerm(currentTerm);
                         collection.Push(new TermCollection(true));
+                        break;
+                    case '^':
+                        exponentaPart = true;
+                        currentTerm.Append(current);
                         break;
                     default:
                         if (currentTerm.Length == 0)
@@ -53,9 +71,9 @@ namespace CanonicalEquation.Logic
             collection.First().AddTerm(currentTerm);
 
             List<Term> terms =  new List<Term>();
-            foreach (var termCollection in collection)
+            for (int i = collection.Count-1; i >= 0; i--)
             {
-                foreach (var term in termCollection.Terms)
+                foreach (var term in collection.Skip(i).First().Terms)
                 {
                     terms.Add(term);
                 }
@@ -78,7 +96,10 @@ namespace CanonicalEquation.Logic
             var result = new StringBuilder();
             foreach (Term term in terms)
             {
-                result.Append(term);
+                if (term.A != 0)
+                {
+                    result.Append(term);
+                }
             }
             result.Append("=0");
 
@@ -152,7 +173,7 @@ namespace CanonicalEquation.Logic
                 {
                     currentState = TermPart.Variable;
 
-                    if (char.IsNumber(current))
+                    if (char.IsNumber(current) || current=='-')
                     {
                         exponent.Append(current);
                     }
@@ -176,13 +197,22 @@ namespace CanonicalEquation.Logic
                 }
             }
 
-
             A = a.Length == 1  ? (a[0]=='-'? -1 : 1) : double.Parse(a.ToString(), CultureInfo.InvariantCulture);
             if (exponent.Length > 0)
             {
                 Variables[prevVariable] += int.Parse(exponent.ToString()) - 1;
                 exponent.Clear();
             }
+
+            if (Variables.Any())
+            {
+                Variables = Variables.Where(t => t.Value != 0).ToDictionary(t => t.Key, t => t.Value);
+                if (!Variables.Any())
+                {
+                    A = 0;
+                }
+            }
+
         }
 
         public double A { get; set; }
@@ -228,7 +258,7 @@ namespace CanonicalEquation.Logic
             {
                
                 result.Append(pair.Key);
-                if (pair.Value > 1)
+                if (pair.Value != 1)
                 {
                     result.Append('^');
                     result.Append(pair.Value);
