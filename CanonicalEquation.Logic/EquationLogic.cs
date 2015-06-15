@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -17,7 +16,7 @@ namespace CanonicalEquation.Logic
             bool exponentaPart = false;
             foreach (var current in equation)
             {
-                if (!Char.IsNumber(current))
+                if (!(Char.IsNumber(current) || (current == '-' && currentTerm.Length > 0 && currentTerm[currentTerm.Length - 1] == '^')))
                 {
                     exponentaPart = false;
                 }
@@ -27,6 +26,8 @@ namespace CanonicalEquation.Logic
                         continue;
                     case '(':
                         collection.Push(new TermCollection(isMinus ^ collection.First().IsMinus));
+                        currentTerm.Clear();
+                        isMinus = false;
                         break;
                     case ')':
                         collection.First().AddTerm(currentTerm);
@@ -104,167 +105,6 @@ namespace CanonicalEquation.Logic
             result.Append("=0");
 
             return result[0] == '+' ? result.ToString(1, result.Length - 1) : result.ToString();
-        }
-    }
-
-
-    public class TermCollection
-    {
-        public TermCollection(bool isMinus)
-        {
-            Terms = new List<Term>();
-            IsMinus = isMinus;
-        }
-
-        public List<Term> Terms { get; set; }
-        public bool IsMinus { get; set; }
-
-        public int Multiplicator
-        {
-            get { return IsMinus ? -1 : 1; }
-        }
-
-        public void AddTerm(StringBuilder currentTerm)
-        {
-            if (currentTerm.Length > 0)
-            {
-                var term = new Term(currentTerm.ToString());
-                term.A *= Multiplicator;
-                Terms.Add(term);
-                currentTerm.Clear();
-            }
-        }
-
-        public void AddCollection(TermCollection collection)
-        {
-            Terms.AddRange(collection.Terms);
-        }
-    }
-
-    /// <summary>
-    ///     Слагаемое вида ax^k
-    /// </summary>
-    public class Term
-    {
-        private enum TermPart
-        {
-            A,
-            Variable
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="predicate">Выражение в виде ax^k</param>
-        public Term(string predicate)
-        {
-            Variables = new Dictionary<char, int>();
-
-            var a = new StringBuilder();
-            var exponent = new StringBuilder();
-            var currentState = TermPart.A;
-            var prevVariable = char.MaxValue;
-            foreach (var current in predicate)
-            {
-                if ((char.IsNumber(current) || current == '.' || current == '-' || current == '+') && currentState == TermPart.A)
-                {
-                    a.Append(current);
-                }
-                else
-                {
-                    currentState = TermPart.Variable;
-
-                    if (char.IsNumber(current) || current=='-')
-                    {
-                        exponent.Append(current);
-                    }
-                    else if (char.IsLetter(current))
-                    {
-                        if (!Variables.ContainsKey(current))
-                        {
-                            Variables[current] = 1;
-                        }
-                        else
-                        {
-                            Variables[current]++;
-                        }
-                        if (exponent.Length > 0)
-                        {
-                            Variables[prevVariable] += int.Parse(exponent.ToString()) - 1;
-                            exponent.Clear();
-                        }
-                        prevVariable = current;
-                    }
-                }
-            }
-
-            A = a.Length == 1  ? (a[0]=='-'? -1 : 1) : double.Parse(a.ToString(), CultureInfo.InvariantCulture);
-            if (exponent.Length > 0)
-            {
-                Variables[prevVariable] += int.Parse(exponent.ToString()) - 1;
-                exponent.Clear();
-            }
-
-            if (Variables.Any())
-            {
-                Variables = Variables.Where(t => t.Value != 0).ToDictionary(t => t.Key, t => t.Value);
-                if (!Variables.Any())
-                {
-                    A = 0;
-                }
-            }
-
-        }
-
-        public double A { get; set; }
-
-        /// <summary>
-        ///     Переменные и их степени [x1]=k1
-        /// </summary>
-        public Dictionary<char, int> Variables { get; set; }
-
-        public bool HasSameVariables(Term term)
-        {
-            if (Variables.Count != term.Variables.Count)
-            {
-                return false;
-            }
-            foreach (KeyValuePair<char, int> pair in Variables)
-            {
-                if (!term.Variables.ContainsKey(pair.Key) || term.Variables[pair.Key]!=pair.Value)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public override string ToString()
-        {
-            var result = new StringBuilder();
-            if (A > 0)
-            {
-                result.Append("+");
-            }
-            if (A == -1)
-            {
-                result.Append('-');
-            }
-            else if (A != 1)
-            {
-                result.Append(A.ToString("G15", CultureInfo.InvariantCulture));
-            }
-            
-            foreach (var pair in Variables)
-            {
-               
-                result.Append(pair.Key);
-                if (pair.Value != 1)
-                {
-                    result.Append('^');
-                    result.Append(pair.Value);
-                }
-            }
-            return result.ToString();
         }
     }
 }

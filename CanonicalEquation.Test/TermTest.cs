@@ -112,9 +112,21 @@ namespace CanonicalEquation.Test
         {
             const string term = "+5x^-2x^2";
             var termData = new Term(term);
-            Assert.AreEqual(0, termData.A);
+            Assert.AreEqual(5, termData.A);
             Assert.AreEqual(0, termData.Variables.Count);
-            Assert.AreEqual("0", termData.ToString());
+            Assert.AreEqual("+5", termData.ToString());
+        }
+
+        [TestMethod]
+        public void NegativeKTermTwoDigit()
+        {
+            const string term = "+5x^-52";
+            var termData = new Term(term);
+            Assert.AreEqual(5, termData.A);
+            Assert.AreEqual(1, termData.Variables.Count);
+            Assert.AreEqual('x', termData.Variables.Single().Key);
+            Assert.AreEqual(-52, termData.Variables.Single().Value);
+            Assert.AreEqual("+5x^-52", termData.ToString());
         }
     }
 }
