@@ -51,8 +51,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="EquationTest.cs" />
-    <Compile Include="TermTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TermTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CanonicalEquation.Logic\CanonicalEquation.Logic.csproj">
