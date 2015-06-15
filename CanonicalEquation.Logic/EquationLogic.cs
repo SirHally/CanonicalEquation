@@ -5,9 +5,38 @@ using System.Text;
 
 namespace CanonicalEquation.Logic
 {
+    /// <summary>
+    /// Логика обработки уравнений
+    /// </summary>
     public class EquationLogic
     {
+        /// <summary>
+        /// Дельта для сравнения дробных величин
+        /// </summary>
+        public const double Tolerance = 0.00001;
+
+        /// <summary>
+        /// Приводит уравнение к каноническому виду
+        /// </summary>
+        /// <param name="equation"></param>
+        /// <returns></returns>
         public string Process(string equation)
+        {
+            Stack<TermCollection> collection = SimplifyEquation(equation);
+
+            IList<Term> terms = GetTermCollection(collection);
+
+            ReduceCollection(terms);
+
+            return MakeSimplifiedEquation(terms);
+        }
+
+        /// <summary>
+        /// Обрабатываем строку с исходным уравнением
+        /// </summary>
+        /// <param name="equation"></param>
+        /// <returns></returns>
+        private Stack<TermCollection> SimplifyEquation(string equation)
         {
             var currentTerm = new StringBuilder();
             var collection = new Stack<TermCollection>();
@@ -30,13 +59,13 @@ namespace CanonicalEquation.Logic
                         isMinus = false;
                         break;
                     case ')':
-                        collection.First().AddTerm(currentTerm);
+                        collection.First().TryAddTerm(currentTerm);
                         var currentCollection = collection.Pop();
                         collection.First().AddCollection(currentCollection);
                         break;
                     case '+':
                         isMinus = false;
-                        collection.First().AddTerm(currentTerm);
+                        collection.First().TryAddTerm(currentTerm);
                         currentTerm.Append(current);
                         break;
                     case '-':
@@ -47,13 +76,13 @@ namespace CanonicalEquation.Logic
                         else
                         {//Это минус в выражении, между Term
                             isMinus = true;
-                            collection.First().AddTerm(currentTerm);
+                            collection.First().TryAddTerm(currentTerm);
                             currentTerm.Append(current);
                         }
                         break;
                     case '=':
                         isMinus = false;
-                        collection.First().AddTerm(currentTerm);
+                        collection.First().TryAddTerm(currentTerm);
                         collection.Push(new TermCollection(true));
                         break;
                     case '^':
@@ -69,20 +98,38 @@ namespace CanonicalEquation.Logic
                         break;
                 }
             }
-            collection.First().AddTerm(currentTerm);
+            collection.First().TryAddTerm(currentTerm);
 
-            List<Term> terms =  new List<Term>();
-            for (int i = collection.Count-1; i >= 0; i--)
+            return collection;
+        }
+
+        /// <summary>
+        /// Склеиваем оставшиеся последовательности и получаем необходимые слагаемые.
+        /// Они уже имеют правильные знаки
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        private IList<Term> GetTermCollection(Stack<TermCollection> collection)
+        {
+            List<Term> terms = new List<Term>();
+            for (int i = collection.Count() - 1; i >= 0; i--)
             {
                 foreach (var term in collection.Skip(i).First().Terms)
                 {
                     terms.Add(term);
                 }
             }
+            return terms;
+        }
 
+        /// <summary>
+        /// Приводим подобные члены
+        /// </summary>
+        private void ReduceCollection(IList<Term> terms)
+        {
             for (int i = 0; i < terms.Count; i++)
             {
-                for (int j = i+1; j < terms.Count; j++)
+                for (int j = i + 1; j < terms.Count; j++)
                 {
                     if (terms[i].HasSameVariables(terms[j]))
                     {
@@ -92,12 +139,19 @@ namespace CanonicalEquation.Logic
                     }
                 }
             }
+        }
 
-
+        /// <summary>
+        /// Формируем строку по созданному уравнению
+        /// </summary>
+        /// <param name="terms"></param>
+        /// <returns></returns>
+        private string MakeSimplifiedEquation(IList<Term> terms)
+        {
             var result = new StringBuilder();
             foreach (Term term in terms)
             {
-                if (term.A != 0)
+                if (Math.Abs(term.A) > Tolerance)
                 {
                     result.Append(term);
                 }

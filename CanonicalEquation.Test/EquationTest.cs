@@ -9,6 +9,9 @@ namespace CanonicalEquation.Test
     [TestClass]
     public class EquationTest
     {
+        /// <summary>
+        /// Простое уравнение без скобок
+        /// </summary>
         [TestMethod]
         public void SimpleEquation()
         {
@@ -17,6 +20,9 @@ namespace CanonicalEquation.Test
            Assert.AreEqual("x^2+4.5xy-y^2=0", result);
         }
 
+        /// <summary>
+        /// Простое уравнение с одноуровневыми скобками
+        /// </summary>
         [TestMethod]
         public void SimpleEquationWithBrace()
         {
@@ -25,6 +31,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("x^2+2.5xy+2y+y^2=0", result);
         }
 
+        /// <summary>
+        /// Простое уравнение с вложенными скобками, которые дублируются
+        /// </summary>
         [TestMethod]
         public void SimpleEquationDoubleBrace()
         {
@@ -33,6 +42,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("-x^2-4.5xy+y^2=0", result);
         }
 
+        /// <summary>
+        /// Уравнение со вложенными на два уровня скобками
+        /// </summary>
         [TestMethod]
         public void ComplexEquationOneLevelOneBrace()
         {
@@ -41,6 +53,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("-x^2+2.5xy+2y+y^2=0", result);
         }
 
+        /// <summary>
+        /// Уравнение со вложенными скобками, находящимися на одном уровне
+        /// </summary>
         [TestMethod]
         public void ComplexEquationOneLevelTwoBrace()
         {
@@ -49,6 +64,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("x^2+4.5xy+2y+y^2=0", result);
         }
 
+        /// <summary>
+        /// Уравнение со вложенными на несколько уровней скобками
+        /// </summary>
         [TestMethod]
         public void ComplexEquationTwoLevelOneBrace()
         {
@@ -57,6 +75,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("-x^2-2.5xy+y^2=0", result);
         }
 
+        /// <summary>
+        /// Уравнение с отрицательной степенью
+        /// </summary>
         [TestMethod]
         public void EquationWithNegativeExponent()
         {
@@ -65,6 +86,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("-x^2-2.5x^-52y+y^2=0", result);
         }
 
+        /// <summary>
+        /// Уравнение с сокращением переменных внутри слагаемого
+        /// </summary>
         [TestMethod]
         public void EquationWithReducedP()
         {

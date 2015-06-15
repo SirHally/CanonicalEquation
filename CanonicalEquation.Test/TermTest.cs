@@ -11,6 +11,9 @@ namespace CanonicalEquation.Test
     [TestClass]
     public class TermTest
     {
+        /// <summary>
+        /// Проверяем простое слагаемое с одной переменной и числовым коэффициентом
+        /// </summary>
         [TestMethod]
         public void SimpleTerm()
         {
@@ -23,6 +26,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("+5x^2", termData.ToString());
         }
 
+        /// <summary>
+        /// Проверяем обработку нескольких переменных
+        /// </summary>
         [TestMethod]
         public void ManyVariableTerm()
         {
@@ -41,6 +47,10 @@ namespace CanonicalEquation.Test
 
             Assert.AreEqual(term, termData.ToString());
         }
+
+        /// <summary>
+        /// Проверяем сокращение переменных при умножении
+        /// </summary>
         [TestMethod]
         public void DuplicateVariableTerm()
         {
@@ -60,6 +70,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("-127.58x^3yz^4", termData.ToString());
         }
 
+        /// <summary>
+        /// Проверяем обработку слагаемого без коэффициент А
+        /// </summary>
         [TestMethod]
         public void TermWithoutA()
         {
@@ -72,6 +85,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("+x^2", termData.ToString());
         }
 
+        /// <summary>
+        /// Проверяем обработку слагаемого без X и K
+        /// </summary>
         [TestMethod]
         public void TermWithoutVariable()
         {
@@ -82,6 +98,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("+5", termData.ToString());
         }
 
+        /// <summary>
+        /// Проверяем обработку отрицательной степени
+        /// </summary>
         [TestMethod]
         public void NegativeKTerm()
         {
@@ -94,6 +113,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("+5x^-2", termData.ToString());
         }
 
+        /// <summary>
+        /// Проверяем сокращение переменных при умножении
+        /// </summary>
         [TestMethod]
         public void NegativeKReduceVariable()
         {
@@ -106,7 +128,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("+5y", termData.ToString());
         }
 
-
+        /// <summary>
+        /// Проверяем сокращение всех переменных при умножении
+        /// </summary>
         [TestMethod]
         public void NegativeKReduceTerm()
         {
@@ -117,6 +141,9 @@ namespace CanonicalEquation.Test
             Assert.AreEqual("+5", termData.ToString());
         }
 
+        /// <summary>
+        /// Проверяем отрицательные степени, состоящие из нескольких цирф
+        /// </summary>
         [TestMethod]
         public void NegativeKTermTwoDigit()
         {

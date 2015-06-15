@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -10,13 +11,23 @@ namespace CanonicalEquation.Logic
     /// </summary>
     public class Term
     {
+        /// <summary>
+        /// Текущее состоянии при анализе слагаемого
+        /// </summary>
         private enum TermPart
         {
+            /// <summary>
+            /// Анализируется числовой коэффициент в начала
+            /// </summary>
             A,
+            /// <summary>
+            /// Анализируется блок с переменными
+            /// </summary>
             Variable
         }
 
         /// <summary>
+        /// Создаем объект-слагаемое на основе его текстового представления
         /// </summary>
         /// <param name="predicate">Выражение в виде ax^k</param>
         public Term(string predicate)
@@ -77,6 +88,9 @@ namespace CanonicalEquation.Logic
 
         }
 
+        /// <summary>
+        /// Коэффициент А
+        /// </summary>
         public double A { get; set; }
 
         /// <summary>
@@ -84,6 +98,11 @@ namespace CanonicalEquation.Logic
         /// </summary>
         public Dictionary<char, int> Variables { get; set; }
 
+        /// <summary>
+        /// Определяет, являются ли два слагаемых подобными
+        /// </summary>
+        /// <param name="term"></param>
+        /// <returns></returns>
         public bool HasSameVariables(Term term)
         {
             if (Variables.Count != term.Variables.Count)
@@ -100,6 +119,10 @@ namespace CanonicalEquation.Logic
             return true;
         }
 
+        /// <summary>
+        /// Строковое представление слагаемого
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             var result = new StringBuilder();
@@ -107,11 +130,11 @@ namespace CanonicalEquation.Logic
             {
                 result.Append("+");
             }
-            if (A == -1)
+            if (Math.Abs(A - (-1)) < EquationLogic.Tolerance)
             {
                 result.Append('-');
             }
-            else if (A != 1)
+            else if (Math.Abs(A - 1) > EquationLogic.Tolerance)
             {
                 result.Append(A.ToString("G15", CultureInfo.InvariantCulture));
             }

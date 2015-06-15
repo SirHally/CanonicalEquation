@@ -20,7 +20,7 @@ namespace CanonicalEquation.Console
                 string path = args.First();
                 if (File.Exists(path))
                 {
-                    string outFilePath = Path.GetDirectoryName(path) + Path.GetFileNameWithoutExtension(path) + ".out";
+                    string outFilePath = Path.GetDirectoryName(path) +"\\" +Path.GetFileNameWithoutExtension(path) + ".out";
                     using (var writer = new StreamWriter(outFilePath))
                     {
                         using (var reader = new StreamReader(path))
